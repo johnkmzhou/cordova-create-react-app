@@ -44,11 +44,12 @@ Now we can build our output to the www directory.
 
 `yarn run build`
 
-The rest of these instructions have files and changes that are not in the current repo due to the nature of the dependencies that have to be brought down.
+The rest of these instructions have files and changes that are not in the current repository due to the nature of the dependencies that have to be brought down. Also I didn't want to tie the tutorial down with specific versions of Android and iOS.
 
 To target platforms:
 
 `cordova platform add ios`
+
 `cordova platform add android`
 
 You need to install SDKs for each platform that you wish to target. Read this to check what requirements need to be satisfied: https://cordova.apache.org/docs/en/latest/guide/cli/index.html#install-pre-requisites-for-building
@@ -56,4 +57,5 @@ You need to install SDKs for each platform that you wish to target. Read this to
 To test the app run:
 
 `cordova emulate android`
+
 `cordova emulate ios`
