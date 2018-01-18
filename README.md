@@ -30,11 +30,34 @@ Because your files will be served from `file://` add this line to your package.j
 
 `"homepage": "./"`
 
+This is specific to create-react-app. In other projects you would need to ensure your paths are not prepended with a /.
+
 Now we will need some files from a Cordova project.
 
-`cordova create sample com.example.tutorial Tutorial`
+`cordova create tutorial com.example.tutorial Tutorial`
 
 Next copy the config.xml from your Cordova project to your Create React App project. The other files and directories in the Cordova project are not currently used in this tutorial but take note of them because you may make use of them as your project develops.
+
+Next modify your index.js so it looks like:
+```
+const startApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'));
+  registerServiceWorker();
+};
+
+if(window.cordova) {
+  document.addEventListener('deviceready', startApp, false);
+} else {
+  startApp();
+}
+```
+
+And add `<script type="text/javascript" src="cordova.js"></script>` to index.html. You may also want to add
+```
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+```
 
 Now we can build our output to the www directory.
 
