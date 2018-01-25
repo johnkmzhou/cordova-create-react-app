@@ -79,3 +79,12 @@ To test the app run:
 `cordova emulate android`
 
 `cordova emulate ios`
+
+## OAuth Authentication
+
+To authenticate using OAuth Providers follow these instructions: https://firebase.google.com/docs/auth/web/cordova
+
+Because the cordova-universal-links-plugin is outdated you should instead install:
+```
+cordova plugin add https://github.com/walteram/cordova-universal-links-plugin.git --save
+```
