@@ -88,3 +88,13 @@ Because the cordova-universal-links-plugin is outdated you should instead instal
 ```
 cordova plugin add https://github.com/walteram/cordova-universal-links-plugin.git --save
 ```
+
+## Deploy iOS
+
+First, sign up for a paid Apple Developer Account. In Xcode, open your project from `/platforms/ios` and go to your Preferences => Accounts. Add the Apple ID that was used for the developer account. Select your Agent Role and click on `Manage Certificates..` and click on the `+` icon to generate a signing certificate. 
+
+Next, go to `https://developer.apple.com/account/ios/profile` and add a new provisioning profile. Select your development or distribution option and on the next page fill your App ID Description (for example, My Cordova App) and your bundle ID that can be found in config.xml.
+
+Next, in Xcode go to your project navigator and select your project. In a drop down list make sure your project is selected as a target. Then, under Signing, select your Team and generate your signing certificate.
+
+Next run the usual commands to generate a Cordova build (`yarn build`, `cordova build ios`, etc) and then you can hit the build button Xcode to deploy to your connected iPhone. 
