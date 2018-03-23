@@ -36,7 +36,7 @@ Now we will need some files from a Cordova project.
 
 `cordova create tutorial com.example.tutorial Tutorial`
 
-Next copy the config.xml from your Cordova project to your Create React App project. The other files and directories in the Cordova project are not currently used in this tutorial but take note of them because you may make use of them as your project develops.
+Next copy the config.xml from your Cordova project to your Create React App project. The other files and directories in the Cordova project are not currently used in this tutorial but take note of them because you may make use of them as your project develops. For example, the `res` directory would be where you would place icons and splash screens.
 
 Next modify your index.js so it looks like:
 ```
@@ -80,21 +80,50 @@ To test the app run:
 
 `cordova emulate ios`
 
-## OAuth Authentication
+To test on a connected devie run:
+
+`cordova run android`
+
+`cordova run ios`
+
+## Recommended Plugins
+
+Often what you will find is that a plugin is no longer being maintained. In that scenario your options are either to find a fork that resolves the issues you are encountering or, as a last ditch effort, attempt to fix it yourself.
+
+### Firebase OAuth Authentication
 
 To authenticate using OAuth Providers follow these instructions: https://firebase.google.com/docs/auth/web/cordova
 
-Because the cordova-universal-links-plugin is outdated you should instead install:
+Because the cordova-universal-links-plugin is outdated you should instead install this fork:
 ```
 cordova plugin add https://github.com/walteram/cordova-universal-links-plugin.git --save
 ```
 
-## Deploy iOS
+### Firebase Analytics and Push Notifications
 
-First, sign up for a paid Apple Developer Account. In Xcode, open your project from `/platforms/ios` and go to your Preferences => Accounts. Add the Apple ID that was used for the developer account. Select your Agent Role and click on `Manage Certificates..` and click on the `+` icon to generate a signing certificate. 
+Due to various issues that haven't beeen resolved in the latest npm package of cordova-plugin-firebase I recommend getting the version of the plugin directly from git
+```
+cordova plugin add https://github.com/arnesson/cordova-plugin-firebase.git --save
+```
+
+## iOS Deployment
+
+First, sign up for a paid Apple Developer Account. In Xcode, open your project from `/platforms/ios` and go to your Preferences > Accounts. Add the Apple ID that was used for the developer account. Select your Agent Role and click on `Manage Certificates..` and click on the `+` icon to generate a signing certificate. 
 
 Next, go to `https://developer.apple.com/account/ios/profile` and add a new provisioning profile. Select your development or distribution option and on the next page fill your App ID Description (for example, My Cordova App) and your bundle ID that can be found in config.xml.
 
 Next, in Xcode go to your project navigator and select your project. In a drop down list make sure your project is selected as a target. Then, under Signing, select your Team and generate your signing certificate.
 
-Next run the usual commands to generate a Cordova build (`yarn build`, `cordova build ios`, etc) and then you can hit the build button Xcode to deploy to your connected iPhone. 
+To prepare for distribution on the Apple App Store, you need to create an archive. In Xcode make sure the app is properly provisioned and signed for distribution. Next run `yarn build` followed by `cordova prepare` to copy any assets and plugins. Then in Xcode, ensure the version and build numbers are properly set and choose a generic device target from the Scheme toolbar menu. Then choose Product > Archive. There is an issue uploading to the App Store from the Archives window. Instead export the archive and upload it via Application Loader. After uploading the build to iTunes Connect, if the build is still in the "Processing" phase after an hour, attempt to upload another build because more than likely there's probably an issue with Apple's servers.
+
+## Android Deployment
+
+First, sign up for a Google Play Developer account. Next, run `yarn build` followed by `cordova build android --release` which will result in an apk that needs to be signed. Then run: 
+```
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore android.keystore app-release-unsigned.apk alias-name
+```
+where `android.keystore` is the location of the keystore and `alias-name` is the alias for your key. Make sure you have Android Studio installed because it will also come with the zipalign tool. For Mac OS you can find it in `~/Library/Android/sdk/build-tools/{version}/zipalign`. Then run:
+```
+~/Library/Android/sdk/build-tools/{version}/zipalign -v 4 app-release-unsigned.apk release.apk
+```
+followed by uploading the build to the Google Play Console.
